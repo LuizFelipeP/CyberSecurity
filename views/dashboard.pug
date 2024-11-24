@@ -1,0 +1,12 @@
+// dashboard.pug
+extends layout  // Isso faz com que use o layout principal, se você estiver usando um
+
+block content
+    h1 Bem-vindo, #{user.name}!
+    p Aqui estão suas informações:
+    ul
+        li Nome: #{user.name}
+        li Email: #{user.email}
+        li Foto de perfil:
+            img(src= user.photo, alt="Foto de Perfil", width="100")
+    a(href="/logout") Logout
