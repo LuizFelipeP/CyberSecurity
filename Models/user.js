@@ -1,34 +1,34 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db'); // seu arquivo de conexão com o banco
 
-// Definindo o modelo User
+
 const User = sequelize.define('User', {
     id: {
-        type: DataTypes.INTEGER,  // ou DataTypes.UUID para UUID
+        type: DataTypes.INTEGER, // ID USER
         primaryKey: true,
-        autoIncrement: true,      // Garante que o ID será gerado automaticamente
+        autoIncrement: true,      
     },
     username: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING,  //USERNAME
         allowNull: false,
     },
     email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, // EMAIL
         allowNull: false,
         unique: true,
     },
     password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, //SENHA
         allowNull: false,
     },
-    googleId: {  // Adicionando o campo googleId para armazenar a ID do Google
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,  // Para garantir que o googleId seja único
+    googleId: {
+        type: DataTypes.STRING, //GOOGLEID
+        allowNull: true, 
+        unique: true,   
     },
     twofa_enabled: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false, // False por padrão; será habilitado quando o 2FA for configurado.
+        type: DataTypes.BOOLEAN, //2FA
+        defaultValue: false,
     },
     twofa_code: {
         type: DataTypes.STRING,
@@ -40,14 +40,14 @@ const User = sequelize.define('User', {
     },
     createdAt: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+        defaultValue: DataTypes.NOW,//CRIADO EM
     },
     updatedAt: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATE, //EDITADO EM
         defaultValue: DataTypes.NOW,
     },
-    twofa_secret: {  // Adicionando o campo twofa_secret
-        type: DataTypes.STRING,
+    twofa_secret: {  
+        type: DataTypes.STRING, //Codigo 2FA
         allowNull: true,
     },
 });

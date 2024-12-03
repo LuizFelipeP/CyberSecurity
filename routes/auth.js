@@ -10,6 +10,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const emailService = require('../services/emailService');
 const authenticateJWT = require('../middlewares/authMiddleware');
 const passport = require('passport');
+const loginLimiter = require('../middlewares/ratelimitmiddleware');
+
+
 
 
 // Rota de Registro
@@ -55,7 +58,7 @@ router.post(
 
 // Rota de Login
 router.post(
-    '/login',
+    '/login',loginLimiter, 
     [
         body('email').isEmail().withMessage('Valid email is required'),
         body('password').notEmpty().withMessage('Password is required'),
@@ -98,7 +101,7 @@ router.post(
             }
 
             // Gerar token JWT se 2FA não estiver habilitado
-            const tokenJWT = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+            const tokenJWT = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1m' });
             res.status(200).json({ message: 'Login successful', token: tokenJWT });
         } catch (error) {
             console.error(error);
@@ -126,10 +129,8 @@ router.post('/enable-2fa', authenticateJWT, async (req, res) => {
         user.twofa_enabled = true;
         await user.save();
 
-        // Gerar o código QR para o aplicativo de autenticação
-        const qrCodeUrl = await qrcode.toDataURL(secret.otpauth_url);
 
-        res.status(200).json({ message: '2FA enabled', qrCodeUrl });
+        res.status(200).json({ message: '2FA enabled' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });
@@ -157,7 +158,7 @@ router.post('/verify-2fa-code', async (req, res) => {
         }
 
         // Gerar token JWT após verificação bem-sucedida
-        const tokenJWT = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+        const tokenJWT = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1m' });
 
         // Limpar código e expiração no banco
         user.twofa_code = null;
@@ -210,7 +211,7 @@ router.get('/dashboard', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/login');
     }
-    res.render('dashboard', { user: req.user });  // Envia o usuário autenticado para a view dashboard.pug
+    res.render('dashboard', { user: req.user });  
 });
 
 module.exports = router;

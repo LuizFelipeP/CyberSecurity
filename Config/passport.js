@@ -1,14 +1,13 @@
 const passport = require('passport');
-const User = require('../models/user'); // Certifique-se de que o caminho para o seu modelo de usuário está correto
+const User = require('../models/user'); 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-require('dotenv').config();  // Carrega as variáveis de ambiente
+require('dotenv').config(); 
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK_URL
 }, function(accessToken, refreshToken, profile, done) {
-    // Lógica de autenticação e armazenamento do usuário
     User.findOne({
         where: { googleId: profile.id }  // Buscando pelo googleId
     })
@@ -20,7 +19,7 @@ passport.use(new GoogleStrategy({
                     username: profile.displayName,
                     email: profile.emails[0].value,
                     photo: profile.photos[0].value,
-                    password: '',  // Definindo uma senha vazia (não é obrigatória no seu caso)
+                    password: '',  //
                 });
                 user.save()
                     .then(() => done(null, user))  // Usuário criado e salvo
@@ -34,14 +33,14 @@ passport.use(new GoogleStrategy({
 
 // Serializa o usuário para a sessão
 passport.serializeUser((user, done) => {
-    done(null, user.id); // Aqui você pode salvar o ID ou qualquer identificador único do usuário
+    done(null, user.id); 
 });
 
 // Desserializa o usuário a partir do ID da sessão
 passport.deserializeUser((id, done) => {
-    User.findByPk(id)  // Usando findByPk para buscar o usuário pelo ID
+    User.findByPk(id) 
         .then(user => {
             done(null, user);
         })
-        .catch(err => done(err));  // Em caso de erro na consulta
+        .catch(err => done(err));  
 });

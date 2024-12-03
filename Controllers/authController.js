@@ -38,13 +38,13 @@ exports.login = async (req, res) => {
                 return res.status(400).json({ error: '2FA code is required' });
             }
 
-            const isCodeValid = await verifyCode(token, user.twofa_code); // Verifica se o código enviado é válido
+            const isCodeValid = await verifyCode(token, user.twofa_code); 
             if (!isCodeValid) {
                 return res.status(400).json({ error: 'Invalid 2FA token' });
             }
         }
 
-        const jwtToken = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+        const jwtToken = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '30s' });
         res.status(200).json({ message: 'Login successful', token: jwtToken });
 
         user.twofa_code = null;
