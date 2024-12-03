@@ -195,7 +195,7 @@ router.get('/google', passport.authenticate('google', {
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
-        res.redirect('/dashboard'); // Redirecionar para o dashboard ou outra página
+        res.redirect('/dashboard    wwwwwwwwww'); // Redirecionar para o dashboard ou outra página
     });
 
 

@@ -15,6 +15,12 @@ require('./config/passport');  // Certifique-se de importar o arquivo onde você
 
 
 
+// Configurar o Pug
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+// Configura o `basedir` para caminhos absolutos em Pug
+app.locals.basedir = path.join(__dirname, 'views');
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
